@@ -1,4 +1,4 @@
-package eu.upm.adic;
+package eu.upm.adic.operation;
 
 
 public interface Operation <Node, Data>{

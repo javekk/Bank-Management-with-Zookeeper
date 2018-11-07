@@ -1,4 +1,7 @@
-package eu.upm.adic;
+package eu.upm.adic.operation;
+
+import eu.upm.adic.Client;
+import eu.upm.adic.ClientDB;
 
 import java.io.Serializable;
 
@@ -6,9 +9,9 @@ public class OperationBank implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private OperationEnum operation;
-    private Client        client        = null;
+    private Client client        = null;
     private Integer       accountNumber = 0;
-    private ClientDB      clientDB      = null;
+    private ClientDB clientDB      = null;
 
     // When the node is going to be sent, the node must include the channel equal to null.
     // The relevant should be the address
