@@ -13,27 +13,22 @@ public class Main {
 
 	private static final int SESSION_TIMEOUT = 5000;
 
-	private ZooKeeper zk = null;
-	private static Bank bank = null;
-
-	String[] hosts = {"127.0.0.1:2181", "127.0.0.1:2182", "127.0.0.1:2183"};
-
 	public static void main(String[] args) throws KeeperException, InterruptedException {
 
-		new Main();
+		ZooKeeper zk = null;
+		Bank bank = null;
 
-	}
-
-	public Main() throws KeeperException, InterruptedException {
+		String[] hosts = {"127.0.0.1:2181", "127.0.0.1:2182", "127.0.0.1:2183"};
 
 		int i = new Random().nextInt(hosts.length);
 		try {
-			this.zk = new ZooKeeper(hosts[i], SESSION_TIMEOUT, null);
+			zk = new ZooKeeper(hosts[i], SESSION_TIMEOUT, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-        bank = new Bank(this.zk);
+        bank = new Bank(zk);
+
         initDB(bank);
 
 		boolean correct = false;
@@ -62,7 +57,7 @@ public class Main {
 
 				switch (menuKey) {
 					case 1: // Create client
-						bank.createClient(this.createClient(sc));
+						bank.createClient(createClient(sc));
 						break;
 					case 2: // Read client
 						System. out .print(">>> Enter account number (int) = ");
@@ -119,7 +114,7 @@ public class Main {
 		sc.close();
 	}
 
-	public Client createClient(Scanner sc) {
+	public static Client createClient(Scanner sc) {
 		int accNumber = 0;
 		String name   = null;
 		int balance   = 0;
@@ -147,7 +142,7 @@ public class Main {
 		return new Client(accNumber, name, balance);
 	}
 
-	public void initDB(Bank bank) {
+	public static void initDB(Bank bank) {
 
 		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(1, "Angel Alarcón", 100)));
 		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(2, "Bernardo Bueno", 200)));
