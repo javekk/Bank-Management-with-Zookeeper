@@ -11,34 +11,51 @@ import java.util.Scanner;
 
 public class Main {
 
+
+	/**
+	 *  Global variables
+	 */
 	private static final int SESSION_TIMEOUT = 5000;
+
+	private static ZooKeeper zookeeper = null;
+
+	private static Bank bank = null;
+
+	private static String[] hosts = {"127.0.0.1:2181", "127.0.0.1:2182", "127.0.0.1:2183"};
+
+
 
 	public static void main(String[] args) throws KeeperException, InterruptedException {
 
-		ZooKeeper zk = null;
-		Bank bank = null;
-
-		String[] hosts = {"127.0.0.1:2181", "127.0.0.1:2182", "127.0.0.1:2183"};
-
+		//Start the session with a random host
 		int i = new Random().nextInt(hosts.length);
 		try {
-			zk = new ZooKeeper(hosts[i], SESSION_TIMEOUT, null);
+			//init zookeeper
+			zookeeper = new ZooKeeper(hosts[i], SESSION_TIMEOUT, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-        bank = new Bank(zk);
-
+		//init bank
+        bank = new Bank(zookeeper);
+		//init DB
         initDB(bank);
 
-		boolean correct = false;
-		int     menuKey = 0;
-		boolean exit    = false;
-		Scanner sc      = new Scanner(System.in);
-		int accNumber   = 0;
-		int balance     = 0;
-		Client client   = null;
-		boolean status  = false;
+		/**
+		 * @TODO
+		 *
+		 * 			IS THIS MENU REALLY NEEDED?
+		 *
+		 */
+
+		boolean correct;
+		int menuKey;
+		boolean exit = false; //exit from the menu
+		Scanner sc = new Scanner(System.in); //get input
+		int accNumber = 0;
+		int balance = 0;
+		Client client = null;
+		boolean status = false;
 
 		while (!exit) {
 			try {
@@ -142,6 +159,13 @@ public class Main {
 		return new Client(accNumber, name, balance);
 	}
 
+
+	/**
+	 * initDB
+	 * @param bank
+	 *
+	 * For dynamic databate with HashMap do we want keep this one?
+	 */
 	public static void initDB(Bank bank) {
 
 		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(1, "Angel Alarcón", 100)));
@@ -150,6 +174,7 @@ public class Main {
 		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(4, "Daniel Díaz", 400)));
 		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(5, "Eugenio Escobar", 500)));
 		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(6, "Fernando Ferrero", 600)));
+		
 	}
 
 }
