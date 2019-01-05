@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
 
 
-	/**
+	/*
 	 *  Global variables
 	 */
 	private static final int SESSION_TIMEOUT = 5000;
@@ -168,13 +168,13 @@ public class Main {
 	 */
 	public static void initDB(Bank bank) {
 
-		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(1, "Angel Alarcón", 100)));
-		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(2, "Bernardo Bueno", 200)));
-		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(3, "Carlos Cepeda", 300)));
-		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(4, "Daniel Díaz", 400)));
-		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(5, "Eugenio Escobar", 500)));
-		bank.handleReceiverMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(6, "Fernando Ferrero", 600)));
-		
+		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(1, "Angel Alarcón", 100)));
+		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(2, "Bernardo Bueno", 200)));
+		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(3, "Carlos Cepeda", 300)));
+		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(4, "Daniel Díaz", 400)));
+		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(5, "Eugenio Escobar", 500)));
+		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(6, "Fernando Ferrero", 600)));
+
 	}
 
 }

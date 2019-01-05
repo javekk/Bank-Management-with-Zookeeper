@@ -14,12 +14,12 @@ import java.util.List;
 
 public class OperationWatcher implements Watcher {
 
-    private ZooKeeper zk;
+    private ZooKeeper zookeeper;
     private Bank bank;
     private String nodename;
 
-    public OperationWatcher(ZooKeeper zk, String nodename, Bank bankInstance){
-        this.zk = zk;
+    public OperationWatcher(ZooKeeper zookeeper, String nodename, Bank bankInstance){
+        this.zookeeper = zookeeper;
         this.bank = bankInstance;
         this.nodename = nodename;
     }
@@ -28,7 +28,7 @@ public class OperationWatcher implements Watcher {
         if (event.getPath().equals(this.nodename)) {
             List<String> operations = null;
             try {
-                operations = zk.getChildren(this.nodename, false);
+                operations = zookeeper.getChildren(this.nodename, false);
             } catch (KeeperException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -39,9 +39,9 @@ public class OperationWatcher implements Watcher {
                 String nodePath = this.nodename + "/" + operation_id;
                 byte[] data = null;
                 try {
-                    data = zk.getData(nodePath, false, null);
-                    Stat stat = zk.exists(nodePath, false);
-                    zk.delete(nodePath, stat.getVersion());
+                    data = zookeeper.getData(nodePath, false, null);
+                    Stat stat = zookeeper.exists(nodePath, false);
+                    zookeeper.delete(nodePath, stat.getVersion());
                 } catch (KeeperException | InterruptedException e) {
                     e.printStackTrace();
                 } finally {
@@ -52,13 +52,13 @@ public class OperationWatcher implements Watcher {
                         e.printStackTrace();
                     }
 
-                    bank.handleReceiverMsg(operation);
-                    if (this.bank.getIsLeader()) this.bank.sendMessages.operationToFollowers(operation);
+                    bank.handleIncomingMsg(operation);
+                    if (this.bank.getIsLeader()) this.bank.sendMessagesBank.operationToFollowers(operation);
                 }
             }
         }
         try {
-            zk.getChildren(this.nodename, this);
+            zookeeper.getChildren(this.nodename, this);
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
         }

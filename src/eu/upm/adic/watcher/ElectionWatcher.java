@@ -1,6 +1,6 @@
 package eu.upm.adic.watcher;
 
-import eu.upm.adic.node.ElectionManager;
+import eu.upm.adic.node.NodeManager;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -12,16 +12,16 @@ import org.apache.zookeeper.Watcher;
  */
 public class ElectionWatcher implements Watcher {
 
-    private ElectionManager electionManager;
+    private NodeManager nodeManager;
 
-    public ElectionWatcher(ElectionManager electionManager){
-        this.electionManager = electionManager;
+    public ElectionWatcher(NodeManager nodeManager){
+        this.nodeManager = nodeManager;
     }
 
     @Override
     public void process(WatchedEvent event) {
         try {
-            electionManager.leaderElection();
+            nodeManager.leaderElection();
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
         }

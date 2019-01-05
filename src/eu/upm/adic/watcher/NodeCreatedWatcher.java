@@ -12,13 +12,13 @@ import org.apache.zookeeper.data.Stat;
 
 import java.io.UnsupportedEncodingException;
 
-public class NewNodeWatcher implements Watcher {
+public class NodeCreatedWatcher implements Watcher {
 
-    private ZooKeeper zk;
+    private ZooKeeper zookeeper;
     private Bank bank;
 
-    public NewNodeWatcher(ZooKeeper zkInstance, Bank bank){
-        this.zk = zkInstance;
+    public NodeCreatedWatcher(ZooKeeper zkInstance, Bank bank){
+        this.zookeeper = zkInstance;
         this.bank = bank;
     }
     @Override
@@ -33,8 +33,8 @@ public class NewNodeWatcher implements Watcher {
         Stat stat;
         String operationNodeName = null;
         try {
-            stat = zk.exists(event.getPath(), false);
-            operationNodeName = new String(zk.getData(event.getPath(), false, stat), "UTF-8");
+            stat = zookeeper.exists(event.getPath(), false);
+            operationNodeName = new String(zookeeper.getData(event.getPath(), false, stat), "UTF-8");
         } catch (KeeperException | InterruptedException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -45,16 +45,16 @@ public class NewNodeWatcher implements Watcher {
 
             System.out.println("Customer: " + c);
 
-            bank.sendMessages.operationToNode(new OperationBank(
+            bank.sendMessagesBank.operationToNode(new OperationBank(
                         OperationEnum.CREATE_CLIENT,
                         new Client(c.getAccountNumber(), c.getName(), c.getBalance())
                     ), operationNodeName);
         }
 
-        NodeDownWatcher nodeDownWatcher = new NodeDownWatcher();
+        NodeCrashedWatcher nodeCrashedWatcher = new NodeCrashedWatcher();
         String nodeId = event.getPath();
         try {
-            zk.exists(nodeId, nodeDownWatcher);
+            zookeeper.exists(nodeId, nodeCrashedWatcher);
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
         }

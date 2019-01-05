@@ -16,6 +16,10 @@ public class Client implements Serializable {
 		this.balance       = balance;
 	}
 
+
+	/*
+	 * GETTER AND SETTER
+	 */
 	public int getAccountNumber() {
 		return accountNumber;
 	}

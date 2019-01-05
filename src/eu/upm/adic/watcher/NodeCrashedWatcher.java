@@ -3,7 +3,7 @@ package eu.upm.adic.watcher;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 
-public class NodeDownWatcher implements Watcher {
+public class NodeCrashedWatcher implements Watcher {
 
     @Override
     public void process(WatchedEvent event) {

@@ -1,4 +1,4 @@
-package eu.upm.adic.node;
+package eu.upm.adic;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
