@@ -1,7 +1,6 @@
 package eu.upm.adic;
 
 import eu.upm.adic.node.NodeManager;
-import eu.upm.adic.operation.OperationManager;
 import eu.upm.adic.operation.OperationBank;
 import eu.upm.adic.operation.OperationEnum;
 import org.apache.zookeeper.*;
@@ -74,7 +73,7 @@ public class SendMessagesBank implements SendMessages {
 
 		List<String> operationNodes = null;
 		try {
-			operationNodes = zookeeper.getChildren(OperationManager.root, false);
+			operationNodes = zookeeper.getChildren(NodeManager.root, false);
 		} catch (KeeperException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -93,7 +92,7 @@ public class SendMessagesBank implements SendMessages {
 			try {
 				String leaderOperationNodeName = Utilities.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
 				if (!operation_node_id.equals(leaderOperationNodeName)) {
-					zookeeper.create(OperationManager.root + "/" + operation_node_id + "/", operationBytes,
+					zookeeper.create(NodeManager.root + "/" + operation_node_id + "/", operationBytes,
 							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
 				}
 			} catch (KeeperException | InterruptedException | UnsupportedEncodingException e) {
