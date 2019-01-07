@@ -1,7 +1,6 @@
 package eu.upm.adic;
 
 import eu.upm.adic.node.NodeManager;
-import eu.upm.adic.operation.OperationManager;
 import eu.upm.adic.operation.OperationBank;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
@@ -19,14 +18,14 @@ public class Bank {
 
 	private boolean isLeader = false;
 
-	// Operations
-	private OperationManager operation;
-	public String operationNodeName;
-
 	// Election
 	private NodeManager nodeManager;
 	private String electionNodeName;
 	private String memberNodeName;
+
+
+	// Operations
+	public String operationNodeName;
 
 
 	public Bank(ZooKeeper zookeeper) throws KeeperException, InterruptedException {
@@ -36,8 +35,7 @@ public class Bank {
 		nodeManager = new NodeManager(zookeeper, this);
 		this.electionNodeName = nodeManager.createElectionNode();
 
-		operation = new OperationManager(zookeeper);
-		this.operationNodeName = operation.createOperationsNode();
+		this.operationNodeName = nodeManager.createOperationsNode();
 
 		this.memberNodeName = nodeManager.createBaseNodes();
 		Stat stat = new Stat();
@@ -51,7 +49,7 @@ public class Bank {
 		nodeManager.leaderElection();
 		nodeManager.listenForFollowingNode(memberNodeName);
 		// Set a watcher for operations
-		operation.listenForOperationUpdates(this, this.operationNodeName);
+		nodeManager.listenForOperationUpdates(this, this.operationNodeName);
 
 		// We set as data for the electionNodeName the operationNodeName.
 		// In this way we know who is the leader and its operationNodeName, so that followers
