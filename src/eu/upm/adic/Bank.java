@@ -37,7 +37,7 @@ public class Bank {
 
 		this.operationNodeName = nodeManager.createOperationsNode();
 
-		this.memberNodeName = nodeManager.createBaseNodes();
+		this.memberNodeName = nodeManager.createBaseNode();
 		Stat stat = new Stat();
 
 		zookeeper.setData(memberNodeName, this.operationNodeName.getBytes(), stat.getVersion());

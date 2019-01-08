@@ -1,6 +1,5 @@
 package eu.upm.adic.node;
 
-
 import eu.upm.adic.watcher.ElectionWatcher;
 import eu.upm.adic.watcher.NodeCreatedWatcher;
 import eu.upm.adic.watcher.NodeCrashedWatcher;
@@ -23,12 +22,12 @@ public class NodeManager {
     private ZooKeeper zookeeper;
     private Bank bank;
 
-    public static String rootElection = "/elections";
+    public static String rootElections = "/elections";
     public static String rootMembers = "/members";
-    public static String root = "/operations";
-
+    public static String rootOperations = "/operations";
 
     private String prefix = "node-";
+
 
     public NodeManager(ZooKeeper zkInstance, Bank bankInstance){
         this.zookeeper = zkInstance;
@@ -44,55 +43,66 @@ public class NodeManager {
      *   \___| |_|  \___|  \___|  \__| |_|  \___/  |_| |_| |___/
      */
 
+
+    /*
+     * Pretty explanatory name LooL
+     */
     public String createElectionNode() throws KeeperException, InterruptedException {
 
-        this.existsOrCreateZnode(zookeeper, rootElection, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        this.existsOrCreateZnode(zookeeper, rootElections, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
-        return this.existsOrCreateZnode(zookeeper, rootElection + "/" + prefix, new byte[0],
+        return this.existsOrCreateZnode(zookeeper, rootElections + "/" + prefix, new byte[0],
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
+
+    /*
+     * Put up the leader election and verify if you are the leader, and if someone else is
+     * then set that node as leader
+     */
     public void leaderElection() throws KeeperException, InterruptedException {
 
-        List<String> nodes = zookeeper.getChildren(rootElection, false);
-        int r = new Random().nextInt(100);
-        // Loop for rand iterations
-        // to wait that a few nodes join
-        for (int i = 0; i < r; i++) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
+        List<String> nodes = zookeeper.getChildren(rootElections, false);
 
+        /* wait for nodes join*/
+        try {
+            Thread.sleep(new Random().nextInt(100));
+        } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }
 
         Collections.sort(nodes);
-        String leader = nodes.get(0);
+        String leader = nodes.get(0); //the first one is the leader
         this.bank.setLeader(leader);
-        if(leader.equals(this.bank.getElectionNodeName().replace(rootElection + "/", ""))){
+
+        if(leader.equals(this.bank.getElectionNodeName().replace(rootElections + "/", ""))){
+
             this.bank.setIsLeader(true);
-            System.out.println("****You are the leader****");
+            System.out.println("-> Dude, you're the Leader ");
 
-//            this.bank.sendCreateBank();
+            NodeCrashedWatcher nodeCrashedWatcher = new NodeCrashedWatcher(); //set watcher for crashes
 
-            NodeCrashedWatcher nodeCrashedWatcher = new NodeCrashedWatcher();
             for (String node_id : nodes) {
-                System.out.println("Node id: " + rootElection + "/" + node_id);
-                zookeeper.exists(rootElection + "/" + node_id, nodeCrashedWatcher);
+                System.out.println("Node id: " + rootElections + "/" + node_id);
+                zookeeper.exists(rootElections + "/" + node_id, nodeCrashedWatcher);
             }
 
         } else {
+
             this.bank.setIsLeader(false);
-            System.out.println("The process " + leader + " is the leader");
+            System.out.println("Process " + leader + " is our leader");
             listenForLeaderNode(leader);
         }
     }
 
+    /*
+     * Create the election watcher and set the zookeeper namenode for that
+     */
     private void listenForLeaderNode(String leaderNode){
         ElectionWatcher electionWatcher = new ElectionWatcher(this);
         try {
-            zookeeper.exists(rootElection + "/" + leaderNode, electionWatcher);
+            zookeeper.exists(rootElections + "/" + leaderNode, electionWatcher);
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -107,7 +117,10 @@ public class NodeManager {
      *  |_| |_| |_|  \___| |_| |_| |_| |_.__/   \___| |_|    |___/
      */
 
-    public String createBaseNodes() throws KeeperException, InterruptedException {
+    /*
+     *  Also here nothing to explain more than the name
+     */
+    public String createBaseNode() throws KeeperException, InterruptedException {
 
         this.existsOrCreateZnode(zookeeper, rootMembers, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT);
@@ -118,7 +131,11 @@ public class NodeManager {
 
     }
 
+    /*
+     *  Create watcher in charge of the members creation
+     */
     public void listenForFollowingNode(String currentNodeId){
+
         String numeric_part = currentNodeId.replace(rootMembers + "/" + prefix, "");
         int id_int = Integer.parseInt(numeric_part);
         int next_member = id_int + 1;
@@ -142,17 +159,22 @@ public class NodeManager {
      */
 
 
+    /*
+     *
+     */
     public String createOperationsNode() throws KeeperException, InterruptedException {
 
-        this.existsOrCreateZnode(this.zookeeper, root, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
+        this.existsOrCreateZnode(this.zookeeper, rootOperations, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT);
 
-        return this.existsOrCreateZnode(this.zookeeper, root + "/" + prefix, new byte[0],
+        return this.existsOrCreateZnode(this.zookeeper, rootOperations + "/" + prefix, new byte[0],
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT_SEQUENTIAL);
-
     }
 
+    /*
+     * Watcher in charge of Operations
+     */
     public void listenForOperationUpdates(Bank bankInstance, String nodeName){
         OperationWatcher operationWatcher = new OperationWatcher(this.zookeeper, nodeName, bankInstance);
         try {
@@ -175,20 +197,23 @@ public class NodeManager {
     /*
      * Check if a particular znode exists. Otherwise it creates it
      */
-    public static String existsOrCreateZnode(ZooKeeper zk, String path, byte[] data, List<ACL> ACL, CreateMode createMode) throws KeeperException, InterruptedException {
-        Stat stat = zk.exists(path, false);
+    public static String existsOrCreateZnode(ZooKeeper zookeeper, String path, byte[] data, List<ACL> ACL, CreateMode createMode) throws KeeperException, InterruptedException {
+        Stat stat = zookeeper.exists(path, false);
         String nodename = null;
         if (stat == null){
-            nodename = zk.create(path, data, ACL, createMode);
+            nodename = zookeeper.create(path, data, ACL, createMode);
         }
         return nodename;
     }
 
-    public static String getLeaderOptNodeName(ZooKeeper zk, String leaderElectionNodeName) throws KeeperException, InterruptedException, UnsupportedEncodingException {
+    /*
+     * Return the leader
+     */
+    public static String getLeaderOptNodeName(ZooKeeper zookeeper, String leaderElectionNodeName) throws KeeperException, InterruptedException, UnsupportedEncodingException {
 
         String leaderOperationNodeName = null;
-        Stat stat = zk.exists(leaderElectionNodeName, false);
-        leaderOperationNodeName = new String(zk.getData(leaderElectionNodeName, false, stat), "UTF-8");
+        Stat stat = zookeeper.exists(leaderElectionNodeName, false);
+        leaderOperationNodeName = new String(zookeeper.getData(leaderElectionNodeName, false, stat), "UTF-8");
 
         return leaderOperationNodeName;
     }
