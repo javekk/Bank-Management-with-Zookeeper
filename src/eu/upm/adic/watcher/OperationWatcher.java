@@ -23,6 +23,7 @@ public class OperationWatcher implements Watcher {
         this.bank = bankInstance;
         this.nodename = nodename;
     }
+
     @Override
     public void process(WatchedEvent event) {
 

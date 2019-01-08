@@ -12,6 +12,10 @@ import java.util.List;
 
 public class SendMessagesBank implements SendMessages {
 
+
+	/*
+	 * Global variables and Constructor
+	 */
 	private ZooKeeper zookeeper;
 	private Bank bank;
 
@@ -20,6 +24,10 @@ public class SendMessagesBank implements SendMessages {
 		this.bank = bank;
 	}
 
+
+	/*
+	 * discriminate against leader or not
+	 */
 	private void sendMessage(OperationBank operation, boolean isLeader) {
 		if (isLeader){
 			operationToFollowers(operation);
@@ -28,7 +36,10 @@ public class SendMessagesBank implements SendMessages {
 		}
 	}
 
+
+
 	private void operationToLeader(OperationBank operation) {
+
 		byte[] operationBytes = new byte[0];
 		try {
 			operationBytes = OperationBank.objToByte(operation);

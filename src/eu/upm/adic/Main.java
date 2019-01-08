@@ -51,7 +51,7 @@ public class Main {
 		int accNumber = 0;
 		int balance = 0;
 		Client client;
-		
+
 		while (!exit) {
 			try {
 				correct = false;
