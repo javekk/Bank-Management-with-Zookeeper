@@ -9,20 +9,17 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Main {
 
+
+public class Main {
 
 	/*
 	 *  Global variables
 	 */
 	private static final int SESSION_TIMEOUT = 5000;
-
 	private static ZooKeeper zookeeper = null;
-
 	private static Bank bank = null;
-
 	private static String[] hosts = {"127.0.0.1:2181", "127.0.0.1:2182", "127.0.0.1:2183"};
-
 
 
 	public static void main(String[] args) throws KeeperException, InterruptedException {
@@ -45,7 +42,7 @@ public class Main {
 		 * @TODO
 		 *
 		 * 			IS THIS MENU REALLY NEEDED?
-		 *
+		 *		-> yes if we want to use this terminal menu
 		 */
 
 		boolean correct;
