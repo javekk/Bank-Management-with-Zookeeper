@@ -9,26 +9,23 @@ public class OperationBank implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private OperationEnum operation;
-	private Client client        = null;
-	private Integer       accountNumber = 0;
-	private ClientDB clientDB      = null;
+	private Client client = null;
+	private Integer accountNumber = 0;
+	private ClientDB clientDB = null;
 	
    // ADD_CLIENT, UPDATE_CLIENT
-	public OperationBank (OperationEnum operation,
-						  Client client) {
+	public OperationBank (OperationEnum operation, Client client) {
 		this.operation = operation;
 		this.client    = client;
 	}
 	
 	// READ_CLIENT, DELETE_CLIENT
-	public OperationBank (OperationEnum operation,
-						  Integer accountNumber ) {
+	public OperationBank (OperationEnum operation, Integer accountNumber ) {
 		this.operation     = operation;
 		this.accountNumber = accountNumber;
 	}
 
-	public OperationBank (OperationEnum operation,
-						  ClientDB clientDB) {
+	public OperationBank (OperationEnum operation, ClientDB clientDB) {
 		this.operation = operation;
 		this.clientDB  = clientDB;
 	}
@@ -65,17 +62,21 @@ public class OperationBank implements Serializable {
 	public void setClientDB(ClientDB clientDB) {
 		this.clientDB = clientDB;
 	}
-	
+
+
+	/**
+	 * @TODO
+	 *
+	 * 				ARE THESE METHODS BELOW REALLY NEEDED?
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		
-		String string = null;
-		
-		string = "OperationBank [operation=" + operation;
+		String string = "OperationBank [operation=" + operation;
 		if (client != null) string = string + ", client=" + client.toString();
 		string = string + ", accountNumber=" + accountNumber + "]\n";
 		if (clientDB != null) string = string + clientDB.toString();
-
 		System.out.println("toString: " + string);
 		
 		return string;
