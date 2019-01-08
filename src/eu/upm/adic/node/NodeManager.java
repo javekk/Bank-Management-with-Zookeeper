@@ -1,6 +1,6 @@
 package eu.upm.adic.node;
 
-import eu.upm.adic.Utilities;
+
 import eu.upm.adic.watcher.ElectionWatcher;
 import eu.upm.adic.watcher.NodeCreatedWatcher;
 import eu.upm.adic.watcher.NodeCrashedWatcher;
@@ -10,7 +10,10 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.ACL;
+import org.apache.zookeeper.data.Stat;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -43,9 +46,9 @@ public class NodeManager {
 
     public String createElectionNode() throws KeeperException, InterruptedException {
 
-        Utilities.existsOrCreateZnode(zookeeper, rootElection, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        this.existsOrCreateZnode(zookeeper, rootElection, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
-        return Utilities.existsOrCreateZnode(zookeeper, rootElection + "/" + prefix, new byte[0],
+        return this.existsOrCreateZnode(zookeeper, rootElection + "/" + prefix, new byte[0],
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.EPHEMERAL_SEQUENTIAL);
     }
@@ -106,10 +109,10 @@ public class NodeManager {
 
     public String createBaseNodes() throws KeeperException, InterruptedException {
 
-        Utilities.existsOrCreateZnode(zookeeper, rootMembers, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
+        this.existsOrCreateZnode(zookeeper, rootMembers, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT);
 
-        return Utilities.existsOrCreateZnode(zookeeper, rootMembers + "/" + prefix, new byte[0],
+        return this.existsOrCreateZnode(zookeeper, rootMembers + "/" + prefix, new byte[0],
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.EPHEMERAL_SEQUENTIAL);
 
@@ -141,10 +144,10 @@ public class NodeManager {
 
     public String createOperationsNode() throws KeeperException, InterruptedException {
 
-        Utilities.existsOrCreateZnode(this.zookeeper, root, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
+        this.existsOrCreateZnode(this.zookeeper, root, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT);
 
-        return Utilities.existsOrCreateZnode(this.zookeeper, root + "/" + prefix, new byte[0],
+        return this.existsOrCreateZnode(this.zookeeper, root + "/" + prefix, new byte[0],
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT_SEQUENTIAL);
 
@@ -158,5 +161,37 @@ public class NodeManager {
             e.printStackTrace();
         }
     }
+
+
+    /**
+     *           _     _   _   _   _     _
+     *   _   _  | |_  (_) | | (_) | |_  (_)   ___   ___
+     *  | | | | | __| | | | | | | | __| | |  / _ \ / __|
+     *  | |_| | | |_  | | | | | | | |_  | | |  __/ \__ \
+     *   \__,_|  \__| |_| |_| |_|  \__| |_|  \___| |___/
+     *
+     */
+
+    /*
+     * Check if a particular znode exists. Otherwise it creates it
+     */
+    public static String existsOrCreateZnode(ZooKeeper zk, String path, byte[] data, List<ACL> ACL, CreateMode createMode) throws KeeperException, InterruptedException {
+        Stat stat = zk.exists(path, false);
+        String nodename = null;
+        if (stat == null){
+            nodename = zk.create(path, data, ACL, createMode);
+        }
+        return nodename;
+    }
+
+    public static String getLeaderOptNodeName(ZooKeeper zk, String leaderElectionNodeName) throws KeeperException, InterruptedException, UnsupportedEncodingException {
+
+        String leaderOperationNodeName = null;
+        Stat stat = zk.exists(leaderElectionNodeName, false);
+        leaderOperationNodeName = new String(zk.getData(leaderElectionNodeName, false, stat), "UTF-8");
+
+        return leaderOperationNodeName;
+    }
+
 
 }

@@ -39,7 +39,7 @@ public class SendMessagesBank implements SendMessages {
 		// Get leader operationNodeName which is stored as data in the electionNodeName of the leader
 		String leaderElectionNodeName = NodeManager.root + "/" + this.bank.getLeader();
 		try {
-			String leaderOperationNodeName = Utilities.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
+			String leaderOperationNodeName = NodeManager.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
 			zookeeper.create(leaderOperationNodeName + "/", operationBytes,
 					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
 		} catch (KeeperException | InterruptedException | UnsupportedEncodingException e) {
@@ -90,7 +90,7 @@ public class SendMessagesBank implements SendMessages {
 			// Do not send the update to the leader (itself) again
 			String leaderElectionNodeName = NodeManager.root + "/" + this.bank.getLeader();
 			try {
-				String leaderOperationNodeName = Utilities.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
+				String leaderOperationNodeName = NodeManager.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
 				if (!operation_node_id.equals(leaderOperationNodeName)) {
 					zookeeper.create(NodeManager.root + "/" + operation_node_id + "/", operationBytes,
 							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
