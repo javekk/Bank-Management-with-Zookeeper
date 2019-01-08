@@ -21,6 +21,7 @@ public class NodeCreatedWatcher implements Watcher {
         this.zookeeper = zkInstance;
         this.bank = bank;
     }
+
     @Override
     public void process(WatchedEvent event) {
         System.out.println("New node: " + event.getPath());

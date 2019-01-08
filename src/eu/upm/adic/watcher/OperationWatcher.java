@@ -25,6 +25,7 @@ public class OperationWatcher implements Watcher {
     }
     @Override
     public void process(WatchedEvent event) {
+
         if (event.getPath().equals(this.nodename)) {
             List<String> operations = null;
             try {
