@@ -44,16 +44,14 @@ public class Main {
 		 * 			IS THIS MENU REALLY NEEDED?
 		 *		-> yes if we want to use this terminal menu
 		 */
-
 		boolean correct;
 		int menuKey;
 		boolean exit = false; //exit from the menu
 		Scanner sc = new Scanner(System.in); //get input
 		int accNumber = 0;
 		int balance = 0;
-		Client client = null;
-		boolean status = false;
-
+		Client client;
+		
 		while (!exit) {
 			try {
 				correct = false;
