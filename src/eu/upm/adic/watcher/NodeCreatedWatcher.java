@@ -33,6 +33,7 @@ public class NodeCreatedWatcher implements Watcher {
      */
     @Override
     public void process(WatchedEvent event) {
+
         System.out.println("New node: " + event.getPath());
         try {
             Thread.sleep(3000);
