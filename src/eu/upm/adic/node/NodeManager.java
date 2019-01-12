@@ -28,14 +28,18 @@ public class NodeManager {
 
     private String prefix = "node-";
 
-
+    /**
+     * Constructor.
+     * @param zkInstance Zookeeper instance to be used to coordinate operations related to the bank instance.
+     * @param bankInstance Bank object.
+     */
     public NodeManager(ZooKeeper zkInstance, Bank bankInstance){
         this.zookeeper = zkInstance;
         this.bank = bankInstance;
     }
 
 
-    /**
+    /*
      *          _                 _     _
      *    ___  | |   ___    ___  | |_  (_)   ___    _ __    ___
      *   / _ \ | |  / _ \  / __| | __| | |  / _ \  | '_ \  / __|
@@ -43,23 +47,27 @@ public class NodeManager {
      *   \___| |_|  \___|  \___|  \__| |_|  \___/  |_| |_| |___/
      */
 
-
-    /*
-     * Pretty explanatory name LooL
+    /**
+     * Responsible for the creation of the /elections root node and child node for the client.
+     * @return The name of the child node.
+     * @throws KeeperException
+     * @throws InterruptedException
      */
     public String createElectionNode() throws KeeperException, InterruptedException {
 
-        this.existsOrCreateZnode(zookeeper, rootElections, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        NodeManager.existsOrCreateZnode(zookeeper, rootElections, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
-        return this.existsOrCreateZnode(zookeeper, rootElections + "/" + prefix, new byte[0],
+        return NodeManager.existsOrCreateZnode(zookeeper, rootElections + "/" + prefix, new byte[0],
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
 
-    /*
-     * Put up the leader election and verify if you are the leader, and if someone else is
-     * then set that node as leader
+    /**
+     * Responsible for managing the election of a leader. It verifies if the current server is the leader or not.
+     * If not, it stores the identity of the leader server.
+     * @throws KeeperException
+     * @throws InterruptedException
      */
     public void leaderElection() throws KeeperException, InterruptedException {
 
@@ -79,7 +87,7 @@ public class NodeManager {
         if(leader.equals(this.bank.getElectionNodeName().replace(rootElections + "/", ""))){
 
             this.bank.setIsLeader(true);
-            System.out.println("-> Dude, you're the Leader ");
+            System.out.println("-> Your server is the leader ");
 
             NodeCrashedWatcher nodeCrashedWatcher = new NodeCrashedWatcher(); //set watcher for crashes
 
@@ -96,8 +104,9 @@ public class NodeManager {
         }
     }
 
-    /*
-     * Create the election watcher and set the zookeeper namenode for that
+    /**
+     * Responsible for creating a watch for the leader's node under the election root node.
+     * @param leaderNode Name of the leader node.
      */
     private void listenForLeaderNode(String leaderNode){
         ElectionWatcher electionWatcher = new ElectionWatcher(this);
@@ -109,7 +118,7 @@ public class NodeManager {
     }
 
 
-    /**
+    /*
      *                                  _
      *   _ __ ___     ___   _ __ ___   | |__     ___   _ __   ___
      *  | '_ ` _ \   / _ \ | '_ ` _ \  | '_ \   / _ \ | '__| / __|
@@ -117,24 +126,28 @@ public class NodeManager {
      *  |_| |_| |_|  \___| |_| |_| |_| |_.__/   \___| |_|    |___/
      */
 
-    /*
-     *  Also here nothing to explain more than the name
+    /**
+     * Responsible for the creation of the /members root node and child node for the client.
+     * @return The name of the child node.
+     * @throws KeeperException
+     * @throws InterruptedException
      */
     public String createBaseNode() throws KeeperException, InterruptedException {
 
-        this.existsOrCreateZnode(zookeeper, rootMembers, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
+        NodeManager.existsOrCreateZnode(zookeeper, rootMembers, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT);
 
-        return this.existsOrCreateZnode(zookeeper, rootMembers + "/" + prefix, new byte[0],
+        return NodeManager.existsOrCreateZnode(zookeeper, rootMembers + "/" + prefix, new byte[0],
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.EPHEMERAL_SEQUENTIAL);
 
     }
 
-    /*
-     *  Create watcher in charge of the members creation
+    /**
+     * Responsible for creating a watch for the upcoming joiners.
+     * @param currentNodeId THe name of the current node.
      */
-    public void listenForFollowingNode(String currentNodeId){
+    public void listenForJoiningNodes(String currentNodeId){
 
         String numeric_part = currentNodeId.replace(rootMembers + "/" + prefix, "");
         int id_int = Integer.parseInt(numeric_part);
@@ -159,21 +172,26 @@ public class NodeManager {
      */
 
 
-    /*
-     *
+    /**
+     * Responsible for the creation of the /operations root node and child node for the client.
+     * @return The name of the child node.
+     * @throws KeeperException
+     * @throws InterruptedException
      */
     public String createOperationsNode() throws KeeperException, InterruptedException {
 
-        this.existsOrCreateZnode(this.zookeeper, rootOperations, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
+        NodeManager.existsOrCreateZnode(this.zookeeper, rootOperations, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT);
 
-        return this.existsOrCreateZnode(this.zookeeper, rootOperations + "/" + prefix, new byte[0],
+        return NodeManager.existsOrCreateZnode(this.zookeeper, rootOperations + "/" + prefix, new byte[0],
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT_SEQUENTIAL);
     }
 
-    /*
-     * Watcher in charge of Operations
+    /**
+     * Responsible for the creation of a watch for the corresponding operations node.
+     * @param bankInstance The bank object.
+     * @param nodeName The name of the current node.
      */
     public void listenForOperationUpdates(Bank bankInstance, String nodeName){
         OperationWatcher operationWatcher = new OperationWatcher(this.zookeeper, nodeName, bankInstance);
@@ -194,8 +212,16 @@ public class NodeManager {
      *
      */
 
-    /*
-     * Check if a particular znode exists. Otherwise it creates it
+    /**
+     * Checks if a particular node exists. If it does not, it creates it.
+     * @param zookeeper Zookeeper instance.
+     * @param path Path for the specific node.
+     * @param data Data to be added when the node is created.
+     * @param ACL ACL list.
+     * @param createMode Creation mode.
+     * @return Name of the node.
+     * @throws KeeperException
+     * @throws InterruptedException
      */
     public static String existsOrCreateZnode(ZooKeeper zookeeper, String path, byte[] data, List<ACL> ACL, CreateMode createMode) throws KeeperException, InterruptedException {
         Stat stat = zookeeper.exists(path, false);
@@ -206,8 +232,15 @@ public class NodeManager {
         return nodename;
     }
 
-    /*
-     * Return the leader
+    /**
+     * Responsible for returning the operations node belonging to the leader.
+     * This is needed for determining where the followers can put the operations that they need to send to the leader.
+     * @param zookeeper Zookeeper instance.
+     * @param leaderElectionNodeName The name of the leader election node that stores the name of the leader operations node.
+     * @return Name of the leader operations node.
+     * @throws KeeperException
+     * @throws InterruptedException
+     * @throws UnsupportedEncodingException
      */
     public static String getLeaderOptNodeName(ZooKeeper zookeeper, String leaderElectionNodeName) throws KeeperException, InterruptedException, UnsupportedEncodingException {
 
