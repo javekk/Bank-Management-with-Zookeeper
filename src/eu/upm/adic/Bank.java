@@ -99,10 +99,7 @@ public class Bank {
 	public void deleteClient(Integer accountNumber) {
 		sendMessagesBank.sendDelete(accountNumber, isLeader);
 	}
-
-	public void sendCreateBank(){
-		sendMessagesBank.sendCreateBank(clientDB, isLeader);
-	}
+	
 
 
 	/*
