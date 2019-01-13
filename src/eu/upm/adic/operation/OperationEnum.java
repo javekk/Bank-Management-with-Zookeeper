@@ -9,3 +9,6 @@ public enum OperationEnum implements Serializable{
 	DELETE_CLIENT,
 	CREATE_BANK
 }
+
+
+

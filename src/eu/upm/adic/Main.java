@@ -56,13 +56,13 @@ public class Main {
 				correct = false;
 				menuKey = 0;
 				while (!correct) {
-					System. out .println(">>> Enter client operation: 1) Create. 2) Read. 3) Update. 4) Delete. 5) BankDB. 6) Exit");
+					System. out .println("- Enter client operation: \n 1) Create \n2) Read\n 3) Update\n 4) Delete\n 5) BankDB\n 6) Exit");
 					if (sc.hasNextInt()) {
 						menuKey = sc.nextInt();
 						correct = true;
 					} else {
 						sc.next();
-						System.out.println("The text provided is not an integer");
+						System.out.println("Hey dude that's Not an integer");
 					}
 				}
 
@@ -71,40 +71,40 @@ public class Main {
 						bank.createClient(createClient(sc));
 						break;
 					case 2: // Read client
-						System. out .print(">>> Enter account number (int) = ");
+						System. out .print("- Enter account number [int]= ");
 						if (sc.hasNextInt()) {
 							accNumber = sc.nextInt();
 							client = bank.readClient(accNumber);
 							System.out.println("Client: " + client);
 						} else {
-							System.out.println("The text provided is not an integer");
+							System.out.println("Hey dude that's Not an integer");
 							sc.next();
 						}
 						break;
 					case 3: // Update client
-						System. out .print(">>> Enter account number (int) = ");
+						System. out .print("- Enter account number [int]= ");
 						if (sc.hasNextInt()) {
 							accNumber = sc.nextInt();
 						} else {
-							System.out.println("The text provided is not an integer");
+							System.out.println("Hey dude that's Not an integer");
 							sc.next();
 						}
-						System. out .print(">>> Enter balance (int) = ");
+						System. out .print("- Enter account number [int]=");
 						if (sc.hasNextInt()) {
 							balance = sc.nextInt();
 						} else {
-							System.out.println("The text provided is not an integer");
+							System.out.println("Hey dude that's Not an integer");
 							sc.next();
 						}
 						bank.updateClient(accNumber, balance);
 						break;
 					case 4: // Delete client
-						System. out .print(">>> Enter account number (int) = ");
+						System. out .print("- Enter account number [int]=");
 						if (sc.hasNextInt()) {
 							accNumber = sc.nextInt();
 							bank.deleteClient(accNumber);
 						} else {
-							System.out.println("The text provided is not an integer");
+							System.out.println("Hey dude that's Not an integer");
 							sc.next();
 						}
 						break;
@@ -133,23 +133,23 @@ public class Main {
 		String name   = null;
 		int balance   = 0;
 
-		System.out.print(">>> Enter account number (int) = ");
+		System.out.print("- Enter account number [int]= ");
 		if (sc.hasNextInt()) {
 			accNumber = sc.nextInt();
 		} else {
-			System.out.println("The text provided is not an integer");
+			System.out.println("Hey dude that's Not an integerr");
 			sc.next();
 			return null;
 		}
 
-		System.out.print(">>> Enter name (String) = ");
+		System.out.print("-Enter name [String]= ");
 		name = sc.next();
 
-		System.out.print(">>> Enter balance (int) = ");
+		System.out.print("-Enter balance [int]= ");
 		if (sc.hasNextInt()) {
 			balance = sc.nextInt();
 		} else {
-			System.out.println("The text provided is not an integer");
+			System.out.println("Hey dude that's Not an integer");
 			sc.next();
 			return null;
 		}
