@@ -18,14 +18,12 @@ public class Bank {
 
 	private boolean isLeader = false;
 
-	// Election
+
 	private NodeManager nodeManager;
-	private String electionNodeName;
-	private String memberNodeName;
 
-
-	// Operations
-	public String operationNodeName;
+	private String electionNodeName; // Election
+	private String memberNodeName; //members
+	public String operationNodeName; // Operations
 
 	/**
 	 * Constructor.
@@ -79,8 +77,7 @@ public class Bank {
 				clientDB.readClient(operation.getAccountNumber());
 				break;
 			case UPDATE_CLIENT:
-				clientDB.updateClient(operation.getClient().getAccountNumber(),
-									  operation.getClient().getBalance());
+				clientDB.updateClient(operation.getClient().getAccountNumber(), operation.getClient().getBalance());
 				break;
 			case DELETE_CLIENT:
 				clientDB.deleteClient(operation.getAccountNumber());

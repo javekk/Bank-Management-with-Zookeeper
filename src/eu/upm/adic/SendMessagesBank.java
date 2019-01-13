@@ -59,7 +59,7 @@ public class SendMessagesBank implements SendMessages {
 		* the child node under the /elections node created by the leader, since it contains the operation node name
 		* as its data. */
 
-		/* TODO: I think we made a mistake here, this should be rootElections
+		/*
 		* We stored the operation node name as data of the election node of the leader. We get the operation node name
 		* back using the corresponding function. */
 		String leaderElectionNodeName = NodeManager.rootElections + "/" + this.bank.getLeader();
@@ -169,14 +169,11 @@ public class SendMessagesBank implements SendMessages {
 	}
 
 	/**
-	 * TODO:
+     * Responsible only send to new connected server
 	 * @param clientDB
 	 * @param isLeader Boolean value that specifies if the sender is the leader or not.
 	 */
 	public void sendCreateBank (ClientDB clientDB, boolean isLeader) {
-
-		// TODO only send to new connected server
-
 		OperationBank operation = new OperationBank(OperationEnum.CREATE_BANK, clientDB);
 		sendMessage(operation, isLeader);
 	}

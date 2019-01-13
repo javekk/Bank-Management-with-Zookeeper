@@ -79,12 +79,6 @@ public class OperationBank implements Serializable {
 	}
 
 
-	/**
-	 * @TODO
-	 *
-	 * 				ARE THESE METHODS BELOW REALLY NEEDED?
-	 * @return
-	 */
 	@Override
 	public String toString() {
 		
