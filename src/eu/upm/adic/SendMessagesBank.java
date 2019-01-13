@@ -43,7 +43,7 @@ public class SendMessagesBank implements SendMessages {
 	}
 
 	/**
-	 * Responsible for sending a given operation to every follower.
+	 * Responsible for sending a given operation to the leader.
 	 * @param operation The operation to be sent.
 	 */
 	private void operationToLeader(OperationBank operation) {
@@ -62,7 +62,7 @@ public class SendMessagesBank implements SendMessages {
 		/* TODO: I think we made a mistake here, this should be rootElections
 		* We stored the operation node name as data of the election node of the leader. We get the operation node name
 		* back using the corresponding function. */
-		String leaderElectionNodeName = NodeManager.rootOperations + "/" + this.bank.getLeader();
+		String leaderElectionNodeName = NodeManager.rootElections + "/" + this.bank.getLeader();
 		try {
 			String leaderOperationNodeName = NodeManager.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
 			zookeeper.create(leaderOperationNodeName + "/", operationBytes,

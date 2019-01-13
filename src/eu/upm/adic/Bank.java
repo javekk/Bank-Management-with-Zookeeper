@@ -38,7 +38,7 @@ public class Bank {
 
 		nodeManager = new NodeManager(zookeeper, this);
 
-		// Creating nodes belonging to this instance. Thes are used to track elections,
+		// Creating nodes belonging to this instance. These are used to track elections,
 		// operations and alive members of the cluster
 		this.electionNodeName = nodeManager.createElectionNode();
 		this.operationNodeName = nodeManager.createOperationsNode();
