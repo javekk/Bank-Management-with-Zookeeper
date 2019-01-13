@@ -14,10 +14,18 @@ public class ElectionWatcher implements Watcher {
 
     private NodeManager nodeManager;
 
+    /**
+     * Constructor.
+     * @param nodeManager The node manager instance responsible for providing the means of electing a new leader.
+     */
     public ElectionWatcher(NodeManager nodeManager){
         this.nodeManager = nodeManager;
     }
 
+    /**
+     * Responsible for taking the necessary steps when the watch is triggered.
+     * @param event The event object that triggered the watch.
+     */
     @Override
     public void process(WatchedEvent event) {
         try {

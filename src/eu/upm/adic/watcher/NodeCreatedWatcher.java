@@ -17,11 +17,20 @@ public class NodeCreatedWatcher implements Watcher {
     private ZooKeeper zookeeper;
     private Bank bank;
 
+    /**
+     * Constructor.
+     * @param zkInstance Zookeeper instance to be used to coordinate operations related to the bank instance.
+     * @param bank Bank object that provides the means of sending the necessary messages.
+     */
     public NodeCreatedWatcher(ZooKeeper zkInstance, Bank bank){
         this.zookeeper = zkInstance;
         this.bank = bank;
     }
 
+    /**
+     * Responsible for taking the necessary steps when the watch is triggered.
+     * @param event The event object that triggered the watch.
+     */
     @Override
     public void process(WatchedEvent event) {
 

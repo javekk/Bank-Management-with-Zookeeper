@@ -21,9 +21,13 @@ public class Main {
 	private static Bank bank = null;
 	private static String[] hosts = {"127.0.0.1:2181", "127.0.0.1:2182", "127.0.0.1:2183"};
 
-
+	/**
+	 * Entry point of the application. Responsible for initializing the application and providing a menu for users.
+	 * @param args Not used.
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 */
 	public static void main(String[] args) throws KeeperException, InterruptedException {
-
 		//Start the session with a random host
 		int i = new Random().nextInt(hosts.length);
 		try {
@@ -33,17 +37,12 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		//init bank
+		//init the bank instance
         bank = new Bank(zookeeper);
-		//init DB
-        initDB(bank);
 
-		/**
-		 * @TODO
-		 *
-		 * 			IS THIS MENU REALLY NEEDED?
-		 *		-> yes if we want to use this terminal menu
-		 */
+		//We fill the bank DB with some dummy data so that it is not completely empty.
+		initDB(bank);
+
 		boolean correct;
 		int menuKey;
 		boolean exit = false; //exit from the menu
@@ -57,7 +56,7 @@ public class Main {
 				correct = false;
 				menuKey = 0;
 				while (!correct) {
-					System. out .println(">>> Enter opn cliente.: 1) Create. 2) Read. 3) Update. 4) Delete. 5) BankDB. 6) Exit");
+					System. out .println(">>> Enter client operation: 1) Create. 2) Read. 3) Update. 4) Delete. 5) BankDB. 6) Exit");
 					if (sc.hasNextInt()) {
 						menuKey = sc.nextInt();
 						correct = true;
@@ -111,7 +110,6 @@ public class Main {
 						break;
 					case 5: // Get bank DB
 						System.out.println(bank.toString());
-//						bank.sendCreateBank();
 						break;
 					case 6:
 						exit = true;
@@ -126,6 +124,10 @@ public class Main {
 		sc.close();
 	}
 
+	/**
+	* Responsible for printing the steps of user creation.
+	* @param sc Scanner object to be used to obtain user input.
+	*/
 	public static Client createClient(Scanner sc) {
 		int accNumber = 0;
 		String name   = null;
@@ -135,7 +137,7 @@ public class Main {
 		if (sc.hasNextInt()) {
 			accNumber = sc.nextInt();
 		} else {
-			System.out.println("The provised text provided is not an integer");
+			System.out.println("The text provided is not an integer");
 			sc.next();
 			return null;
 		}
@@ -147,7 +149,7 @@ public class Main {
 		if (sc.hasNextInt()) {
 			balance = sc.nextInt();
 		} else {
-			System.out.println("The provised text provided is not an integer");
+			System.out.println("The text provided is not an integer");
 			sc.next();
 			return null;
 		}
@@ -156,21 +158,22 @@ public class Main {
 
 
 	/**
-	 * initDB
-	 * @param bank
-	 *
-	 * For dynamic databate with HashMap do we want keep this one?
-	 */
+	 * Responsible for filling the DB with some dummy data.
+	 * @param bank The bank object whose client DB is to be initialized.
+	 **/
 	public static void initDB(Bank bank) {
-
-		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(1, "Angel Alarcón", 100)));
-		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(2, "Bernardo Bueno", 200)));
-		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(3, "Carlos Cepeda", 300)));
-		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(4, "Daniel Díaz", 400)));
-		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(5, "Eugenio Escobar", 500)));
-		bank.handleIncomingMsg(new OperationBank(OperationEnum.CREATE_CLIENT, new Client(6, "Fernando Ferrero", 600)));
-
+		bank.handleIncomingMsg(new OperationBank(
+				OperationEnum.CREATE_CLIENT, new Client(1, "Angel Alarcón", 100)));
+		bank.handleIncomingMsg(new OperationBank
+				(OperationEnum.CREATE_CLIENT, new Client(2, "Bernardo Bueno", 200)));
+		bank.handleIncomingMsg(new OperationBank(
+				OperationEnum.CREATE_CLIENT, new Client(3, "Carlos Cepeda", 300)));
+		bank.handleIncomingMsg(new OperationBank(
+				OperationEnum.CREATE_CLIENT, new Client(4, "Daniel Díaz", 400)));
+		bank.handleIncomingMsg(new OperationBank(
+				OperationEnum.CREATE_CLIENT, new Client(5, "Eugenio Escobar", 500)));
+		bank.handleIncomingMsg(new OperationBank(
+				OperationEnum.CREATE_CLIENT, new Client(6, "Fernando Ferrero", 600)));
 	}
-
 }
 

@@ -13,24 +13,39 @@ public class OperationBank implements Serializable {
 	private Integer accountNumber = 0;
 	private ClientDB clientDB = null;
 	
-   // ADD_CLIENT, UPDATE_CLIENT
+	/**
+	 * Responsible for storing the details of ADD and UPDATE operations.
+	 * @param operation The given operation enum value.
+	 * @param client The corresponding client.
+	 */
 	public OperationBank (OperationEnum operation, Client client) {
 		this.operation = operation;
 		this.client    = client;
 	}
-	
-	// READ_CLIENT, DELETE_CLIENT
+
+	/**
+	 * Responsible for storing the details of READ and DELETE operations
+	 * @param operation The given operation enum value.
+	 * @param accountNumber The account number of the corresponding client.
+	 */
 	public OperationBank (OperationEnum operation, Integer accountNumber ) {
 		this.operation     = operation;
 		this.accountNumber = accountNumber;
 	}
 
+	/**
+	 * Responsible for storing details of operations in general.
+	 * @param operation The given operation enum value.
+	 * @param clientDB The corresponding clientDB instance.
+	 */
 	public OperationBank (OperationEnum operation, ClientDB clientDB) {
 		this.operation = operation;
 		this.clientDB  = clientDB;
 	}
 
-	
+	/*
+	Getters and setters
+	 */
 	public OperationEnum getOperation() {
 		return operation;
 	}

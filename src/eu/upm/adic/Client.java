@@ -49,6 +49,8 @@ public class Client implements Serializable {
 		return "[" + accountNumber + ", " + name + ", " + balance + "]";
 	}
 
+
+	// TODO: do we still need these?
 	@Override
 	public int hashCode() {
 		final int prime = 31;

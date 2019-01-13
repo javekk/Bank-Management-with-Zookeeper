@@ -18,12 +18,22 @@ public class OperationWatcher implements Watcher {
     private Bank bank;
     private String nodename;
 
+    /**
+     * Constructor.
+     * @param zookeeper Zookeeper instance to be used to coordinate operations related to the bank instance.
+     * @param nodename The operation node.
+     * @param bankInstance Bank object that provides the means of sending the necessary messages.
+     */
     public OperationWatcher(ZooKeeper zookeeper, String nodename, Bank bankInstance){
         this.zookeeper = zookeeper;
         this.bank = bankInstance;
         this.nodename = nodename;
     }
 
+    /**
+     * Responsible for taking the necessary steps when the watch is triggered.
+     * @param event The event object that triggered the watch.
+     */
     @Override
     public void process(WatchedEvent event) {
 
