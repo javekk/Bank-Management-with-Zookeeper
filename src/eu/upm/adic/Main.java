@@ -41,7 +41,7 @@ public class Main {
         bank = new Bank(zookeeper);
 
 		//We fill the bank DB with some dummy data so that it is not completely empty.
-		initDB(bank);
+		//initDB(bank);
 
 		boolean correct;
 		int menuKey;
@@ -56,7 +56,7 @@ public class Main {
 				correct = false;
 				menuKey = 0;
 				while (!correct) {
-					System. out .println("- Enter client operation: \n 1) Create \n2) Read\n 3) Update\n 4) Delete\n 5) BankDB\n 6) Exit");
+					System. out .println("- Enter client operation: \n 1) Create \n 2) Read\n 3) Update\n 4) Delete\n 5) BankDB\n 6) Exit");
 					if (sc.hasNextInt()) {
 						menuKey = sc.nextInt();
 						correct = true;

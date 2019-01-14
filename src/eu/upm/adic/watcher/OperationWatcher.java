@@ -69,10 +69,13 @@ public class OperationWatcher implements Watcher {
                 }
             }
         }
+        
+        bank.getNodeManager().listenForOperationUpdates(bank, event.getPath());
+        /*
         try {
             zookeeper.getChildren(this.nodename, this);
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

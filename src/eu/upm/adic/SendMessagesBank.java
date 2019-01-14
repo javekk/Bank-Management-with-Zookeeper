@@ -58,10 +58,6 @@ public class SendMessagesBank implements SendMessages {
 		/* In order to get the operation node name of the leader, first we need to check what is the name of
 		* the child node under the /elections node created by the leader, since it contains the operation node name
 		* as its data. */
-
-		/* TODO: I think we made a mistake here, this should be rootElections
-		* We stored the operation node name as data of the election node of the leader. We get the operation node name
-		* back using the corresponding function. */
 		String leaderElectionNodeName = NodeManager.rootElections + "/" + this.bank.getLeader();
 		try {
 			String leaderOperationNodeName = NodeManager.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
@@ -165,19 +161,6 @@ public class SendMessagesBank implements SendMessages {
 	public void sendDelete(Integer accountNumber, boolean isLeader) {
 		OperationBank operation = new OperationBank(OperationEnum.DELETE_CLIENT, accountNumber);
 		if (isLeader) this.bank.handleIncomingMsg(operation);
-		sendMessage(operation, isLeader);
-	}
-
-	/**
-	 * TODO:
-	 * @param clientDB
-	 * @param isLeader Boolean value that specifies if the sender is the leader or not.
-	 */
-	public void sendCreateBank (ClientDB clientDB, boolean isLeader) {
-
-		// TODO only send to new connected server
-
-		OperationBank operation = new OperationBank(OperationEnum.CREATE_BANK, clientDB);
 		sendMessage(operation, isLeader);
 	}
 }
