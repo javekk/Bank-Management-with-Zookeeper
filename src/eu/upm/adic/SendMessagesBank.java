@@ -34,7 +34,7 @@ public class SendMessagesBank implements SendMessages {
 	 * @param operation The operation to be sent.
 	 * @param isLeader Boolean value that specifies if the sender is a leader or not.
 	 */
-	private void sendMessage(OperationBank operation, boolean isLeader) {
+	public void sendMessage(OperationBank operation, boolean isLeader) {
 		if (isLeader){
 			operationToFollowers(operation);
 		} else {

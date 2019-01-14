@@ -1,0 +1,10 @@
+2019-01-14 09:54:42,272 [myid:] - INFO  [main:QuorumPeerConfig@136] - Reading configuration from: /home/zsolt.dargo/Documentos/ZK_bank/zookeeper-3.4.13/bin/../conf/zoo1.cfg
+2019-01-14 09:54:42,274 [myid:] - ERROR [main:QuorumPeerMain@88] - Invalid config, exiting abnormally
+org.apache.zookeeper.server.quorum.QuorumPeerConfig$ConfigException: Error processing /home/zsolt.dargo/Documentos/ZK_bank/zookeeper-3.4.13/bin/../conf/zoo1.cfg
+	at org.apache.zookeeper.server.quorum.QuorumPeerConfig.parse(QuorumPeerConfig.java:156)
+	at org.apache.zookeeper.server.quorum.QuorumPeerMain.initializeAndRun(QuorumPeerMain.java:104)
+	at org.apache.zookeeper.server.quorum.QuorumPeerMain.main(QuorumPeerMain.java:81)
+Caused by: java.lang.IllegalArgumentException: /home/zsolt.dargo/Documentos/ZK_bank/zookeeper-3.4.13/bin/../conf/zoo1.cfg file is missing
+	at org.apache.zookeeper.server.quorum.QuorumPeerConfig.parse(QuorumPeerConfig.java:140)
+	... 2 more
+Invalid config, exiting abnormally

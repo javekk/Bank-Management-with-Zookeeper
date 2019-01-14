@@ -171,6 +171,10 @@ public class Bank {
 	public void setClientDB(ClientDB clientDB) {
 		this.clientDB = clientDB;
 	}
+	
+	public NodeManager getNodeManager(){
+		return nodeManager;
+	}
 
 	public String toString() {
 		return clientDB.toString();
