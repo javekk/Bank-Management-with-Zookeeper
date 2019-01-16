@@ -62,7 +62,7 @@ public class SendMessagesBank implements SendMessages {
 		try {
 			String leaderOperationNodeName = NodeManager.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
 			zookeeper.create(leaderOperationNodeName + "/", operationBytes,
-					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
 		} catch (KeeperException | InterruptedException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -86,7 +86,7 @@ public class SendMessagesBank implements SendMessages {
 
 		try {
 			zookeeper.create(nodePath + "/", operationBytes,
-					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
 		} catch (KeeperException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -123,7 +123,7 @@ public class SendMessagesBank implements SendMessages {
 				String leaderOperationNodeName = NodeManager.getLeaderOptNodeName(zookeeper, leaderElectionNodeName);
 				if (!operation_node_id.equals(leaderOperationNodeName)) {
 					zookeeper.create(NodeManager.rootOperations + "/" + operation_node_id + "/", operationBytes,
-							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
 				}
 			} catch (KeeperException | InterruptedException | UnsupportedEncodingException e) {
 				e.printStackTrace();

@@ -19,7 +19,7 @@ public class Main {
 	private static final int SESSION_TIMEOUT = 5000;
 	private static ZooKeeper zookeeper = null;
 	private static Bank bank = null;
-	private static String[] hosts = {"138.4.31.95:2181", "138.4.31.96:2182"};
+	private static String[] hosts = {"138.4.31.93:2181", "138.4.31.94:2182"};
 
 	/**
 	 * Entry point of the application. Responsible for initializing the application and providing a menu for users.
@@ -39,9 +39,6 @@ public class Main {
 
 		//init the bank instance
         bank = new Bank(zookeeper);
-
-		//We fill the bank DB with some dummy data so that it is not completely empty.
-		//initDB(bank);
 
 		boolean correct;
 		int menuKey;
@@ -154,27 +151,6 @@ public class Main {
 			return null;
 		}
 		return new Client(accNumber, name, balance);
-	}
-
-
-	/**
-	 * Responsible for filling the DB with some dummy data.
-	 * @param bank The bank object whose client DB is to be initialized.
-	 **/
-	public static void initDB(Bank bank) {
-		SendMessagesBank messageBank = new SendMessagesBank(zookeeper, bank);
-		messageBank.sendMessage(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(1, "Angel Alarcón", 100)), bank.getIsLeader());
-		messageBank.sendMessage(new OperationBank
-				(OperationEnum.CREATE_CLIENT, new Client(2, "Bernardo Bueno", 200)), bank.getIsLeader());
-		messageBank.sendMessage(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(3, "Carlos Cepeda", 300)), bank.getIsLeader());
-		messageBank.sendMessage(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(4, "Daniel Díaz", 400)), bank.getIsLeader());
-		messageBank.sendMessage(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(5, "Eugenio Escobar", 500)), bank.getIsLeader());
-		messageBank.sendMessage(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(6, "Fernando Ferrero", 600)), bank.getIsLeader());
 	}
 }
 

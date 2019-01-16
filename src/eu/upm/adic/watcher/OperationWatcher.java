@@ -29,6 +29,40 @@ public class OperationWatcher implements Watcher {
         this.bank = bankInstance;
         this.nodename = nodename;
     }
+    
+    private void executeOperations(List<String> operations){
+    	System.out.println("Operations: " + operations);
+
+        for (String operation_id : operations) {
+            String nodePath = this.nodename + "/" + operation_id;
+            byte[] data = null;
+            try {
+                data = zookeeper.getData(nodePath, false, null);
+                System.out.println("Currently executed local operation:");
+                System.out.println(OperationBank.byteToObj(data));
+                Stat stat = zookeeper.exists(nodePath, false);
+                zookeeper.delete(nodePath, stat.getVersion());
+            } catch (KeeperException | InterruptedException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+                OperationBank operation = null;
+                try {
+                    operation = OperationBank.byteToObj(data);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                bank.handleIncomingMsg(operation);
+                if (this.bank.getIsLeader()) this.bank.sendMessagesBank.operationToFollowers(operation);
+            }
+        }
+    }
 
     /**
      * Responsible for taking the necessary steps when the watch is triggered.
@@ -39,35 +73,29 @@ public class OperationWatcher implements Watcher {
 
         if (event.getPath().equals(this.nodename)) {
             List<String> operations = null;
+            
+            /*try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}*/
+            
             try {
                 operations = zookeeper.getChildren(this.nodename, false);
             } catch (KeeperException | InterruptedException e) {
                 e.printStackTrace();
             }
-
-            System.out.println("Operations: " + operations);
-
-            for (String operation_id : operations) {
-                String nodePath = this.nodename + "/" + operation_id;
-                byte[] data = null;
-                try {
-                    data = zookeeper.getData(nodePath, false, null);
-                    Stat stat = zookeeper.exists(nodePath, false);
-                    zookeeper.delete(nodePath, stat.getVersion());
-                } catch (KeeperException | InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    OperationBank operation = null;
-                    try {
-                        operation = OperationBank.byteToObj(data);
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    bank.handleIncomingMsg(operation);
-                    if (this.bank.getIsLeader()) this.bank.sendMessagesBank.operationToFollowers(operation);
-                }
+            
+            executeOperations(operations);
+            
+            try {
+                operations = zookeeper.getChildren(this.nodename, false);
+            } catch (KeeperException | InterruptedException e) {
+                e.printStackTrace();
             }
+            
+            executeOperations(operations);
         }
         
         bank.getNodeManager().listenForOperationUpdates(bank, event.getPath());
