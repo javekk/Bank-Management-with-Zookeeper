@@ -9,6 +9,8 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -32,25 +34,20 @@ public class OperationWatcher implements Watcher {
     
     private void executeOperations(List<String> operations){
     	System.out.println("Operations: " + operations);
+    	
+    	Collections.sort(operations);
 
-        for (String operation_id : operations) {
+        for (int i =0; i< operations.size(); ++i){
+        	String operation_id = operations.get(i);
             String nodePath = this.nodename + "/" + operation_id;
             byte[] data = null;
             try {
                 data = zookeeper.getData(nodePath, false, null);
-                System.out.println("Currently executed local operation:");
-                System.out.println(OperationBank.byteToObj(data));
                 Stat stat = zookeeper.exists(nodePath, false);
                 zookeeper.delete(nodePath, stat.getVersion());
             } catch (KeeperException | InterruptedException e) {
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
+            } finally {
                 OperationBank operation = null;
                 try {
                     operation = OperationBank.byteToObj(data);
@@ -73,21 +70,13 @@ public class OperationWatcher implements Watcher {
 
         if (event.getPath().equals(this.nodename)) {
             List<String> operations = null;
-            
-            /*try {
+                       
+            try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}*/
-            
-            try {
-                operations = zookeeper.getChildren(this.nodename, false);
-            } catch (KeeperException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            
-            executeOperations(operations);
+			}
             
             try {
                 operations = zookeeper.getChildren(this.nodename, false);
@@ -99,11 +88,5 @@ public class OperationWatcher implements Watcher {
         }
         
         bank.getNodeManager().listenForOperationUpdates(bank, event.getPath());
-        /*
-        try {
-            zookeeper.getChildren(this.nodename, this);
-        } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
-        }*/
     }
 }

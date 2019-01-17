@@ -19,7 +19,7 @@ public class Main {
 	private static final int SESSION_TIMEOUT = 5000;
 	private static ZooKeeper zookeeper = null;
 	private static Bank bank = null;
-	private static String[] hosts = {"138.4.31.93:2181", "138.4.31.94:2182"};
+	private static String[] hosts = {"138.4.31.91:2181", "138.4.31.115:2182"};
 
 	/**
 	 * Entry point of the application. Responsible for initializing the application and providing a menu for users.
@@ -86,7 +86,7 @@ public class Main {
 							System.out.println("Hey dude that's Not an integer");
 							sc.next();
 						}
-						System. out .print("- Enter account number [int]=");
+						System. out .print("- Enter new balance [int]=");
 						if (sc.hasNextInt()) {
 							balance = sc.nextInt();
 						} else {
