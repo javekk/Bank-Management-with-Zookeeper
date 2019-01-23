@@ -19,7 +19,7 @@ public class Main {
 	private static final int SESSION_TIMEOUT = 5000;
 	private static ZooKeeper zookeeper = null;
 	private static Bank bank = null;
-	private static String[] hosts = {"127.0.0.1:2181", "127.0.0.1:2182", "127.0.0.1:2183"};
+	private static String[] hosts = {"138.4.31.91:2181", "138.4.31.115:2182"};
 
 	/**
 	 * Entry point of the application. Responsible for initializing the application and providing a menu for users.
@@ -40,9 +40,6 @@ public class Main {
 		//init the bank instance
         bank = new Bank(zookeeper);
 
-		//We fill the bank DB with some dummy data so that it is not completely empty.
-		initDB(bank);
-
 		boolean correct;
 		int menuKey;
 		boolean exit = false; //exit from the menu
@@ -56,7 +53,7 @@ public class Main {
 				correct = false;
 				menuKey = 0;
 				while (!correct) {
-					System. out .println("- Enter client operation: \n 1) Create \n2) Read\n 3) Update\n 4) Delete\n 5) BankDB\n 6) Exit");
+					System. out .println("- Enter client operation: \n 1) Create \n 2) Read\n 3) Update\n 4) Delete\n 5) BankDB\n 6) Exit");
 					if (sc.hasNextInt()) {
 						menuKey = sc.nextInt();
 						correct = true;
@@ -89,7 +86,7 @@ public class Main {
 							System.out.println("Hey dude that's Not an integer");
 							sc.next();
 						}
-						System. out .print("- Enter account number [int]=");
+						System. out .print("- Enter new balance [int]=");
 						if (sc.hasNextInt()) {
 							balance = sc.nextInt();
 						} else {
@@ -154,26 +151,6 @@ public class Main {
 			return null;
 		}
 		return new Client(accNumber, name, balance);
-	}
-
-
-	/**
-	 * Responsible for filling the DB with some dummy data.
-	 * @param bank The bank object whose client DB is to be initialized.
-	 **/
-	public static void initDB(Bank bank) {
-		bank.handleIncomingMsg(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(1, "Angel Alarcón", 100)));
-		bank.handleIncomingMsg(new OperationBank
-				(OperationEnum.CREATE_CLIENT, new Client(2, "Bernardo Bueno", 200)));
-		bank.handleIncomingMsg(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(3, "Carlos Cepeda", 300)));
-		bank.handleIncomingMsg(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(4, "Daniel Díaz", 400)));
-		bank.handleIncomingMsg(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(5, "Eugenio Escobar", 500)));
-		bank.handleIncomingMsg(new OperationBank(
-				OperationEnum.CREATE_CLIENT, new Client(6, "Fernando Ferrero", 600)));
 	}
 }
 

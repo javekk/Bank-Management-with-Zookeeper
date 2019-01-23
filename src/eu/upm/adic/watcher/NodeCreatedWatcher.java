@@ -69,5 +69,7 @@ public class NodeCreatedWatcher implements Watcher {
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
         }
+        
+        bank.getNodeManager().listenForJoiningNodes(event.getPath());        
     }
 }

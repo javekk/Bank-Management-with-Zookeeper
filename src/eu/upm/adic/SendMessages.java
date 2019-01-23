@@ -8,6 +8,4 @@ public interface SendMessages {
 
 	void sendDelete(Integer accountNumber, boolean isLeader);
 
-	void sendCreateBank(ClientDB clientDB, boolean isLeader);
-
 }

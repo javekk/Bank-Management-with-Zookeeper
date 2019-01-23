@@ -78,16 +78,16 @@ public class OperationBank implements Serializable {
 		this.clientDB = clientDB;
 	}
 
-
 	@Override
 	public String toString() {
 		
-		String string = "OperationBank [operation=" + operation;
-		if (client != null) string = string + ", client=" + client.toString();
-		string = string + ", accountNumber=" + accountNumber + "]\n";
-		if (clientDB != null) string = string + clientDB.toString();
-		System.out.println("toString: " + string);
-		
+		String string = "Bank operation with the following details: operation=" + operation;
+		if (client != null)
+			string = string + ", client=" + client.toString();
+		string = string + ", accountNumber=" + accountNumber + "\n";
+		if (clientDB != null)
+			string = string + clientDB.toString();
+	
 		return string;
 	}
 

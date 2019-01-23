@@ -3,9 +3,6 @@ package eu.upm.adic;
 import java.io.Serializable;
 
 public class ClientDB implements Serializable {
-	// TODO: Do we still need this?
-	private static final long serialVersionUID = 1L;
-
 	public java.util.HashMap <Integer, Client> clientDB;
 
 	public ClientDB() {
